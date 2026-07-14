@@ -2,8 +2,15 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <meta name="description" content="产品合成 2048 · Molex 产品线 — 纯前端零依赖、可离线运行的合成小游戏" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="description" content="产品合成 2048 · Molex 产品线 — 纯前端零依赖、可离线运行的合成小游戏，扫码即玩" />
+  <meta name="theme-color" content="#0a2540" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="产品合成2048" />
+  <meta name="format-detection" content="telephone=no" />
+  <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='180'%20height='180'%3E%3Crect%20width='180'%20height='180'%20rx='36'%20fill='%230a2540'/%3E%3Ctext%20x='90'%20y='122'%20font-size='96'%20font-weight='bold'%20text-anchor='middle'%20fill='%2300a0e0'%20font-family='sans-serif'%3EM%3C/text%3E%3C/svg%3E" />
   <title>产品合成 2048 · Molex 产品线</title>
   <style>
 /* =========================================================================
@@ -116,11 +123,24 @@ body {
 /* ----------------------------- Toolbar ---------------------------------- */
 .toolbar {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 14px;
+  gap: 10px;
   margin-bottom: 14px;
 }
-.hint { color: var(--muted); font-size: 13px; margin: 0; }
+.toolbar .btn-group { display: flex; gap: 8px; flex-wrap: wrap; }
+.hint { color: var(--muted); font-size: 13px; margin: 0; flex: 1 1 140px; min-width: 140px; }
+.hint kbd {
+  display: inline-block;
+  padding: 1px 6px;
+  margin: 0 1px;
+  font-size: 11px;
+  font-family: inherit;
+  background: var(--navy-2);
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  color: var(--text);
+}
 
 .btn {
   appearance: none;
@@ -141,6 +161,9 @@ body {
   border-color: transparent;
   box-shadow: 0 8px 18px rgba(0, 114, 206, 0.4);
 }
+.btn:disabled { opacity: 0.4; cursor: not-allowed; filter: none; }
+.btn:disabled:hover { filter: none; }
+.btn:disabled:active { transform: none; }
 
 /* ----------------------------- Board ------------------------------------ */
 .board {
@@ -308,6 +331,58 @@ body {
   border-radius: 5px;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3);
 }
+.legend li .lv { color: var(--muted); font-size: 12px; margin-left: auto; padding-left: 8px; }
+
+/* --------------------------- Stats card -------------------------------- */
+.stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.stat-item {
+  background: var(--navy-2);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 10px 12px;
+  text-align: center;
+}
+.stat-item .stat-label {
+  display: block;
+  font-size: 11px;
+  color: var(--muted);
+  letter-spacing: 1px;
+}
+.stat-item .stat-value {
+  display: block;
+  font-size: 19px;
+  font-weight: 800;
+  margin-top: 3px;
+  font-variant-numeric: tabular-nums;
+}
+.stat-item .stat-value.accent { color: #ffd66b; }
+.stat-item .stat-value.tile-name { font-size: 14px; }
+
+/* --------------------------- QR card ----------------------------------- */
+.qr-card .qr-badge {
+  display: inline-block;
+  font-size: 11px;
+  color: #8fe3a0;
+  background: rgba(143, 227, 160, 0.12);
+  border: 1px solid rgba(143, 227, 160, 0.3);
+  border-radius: 20px;
+  padding: 3px 10px;
+  margin-bottom: 10px;
+  letter-spacing: 0.5px;
+}
+.qr-box { width: 200px; height: 200px; }
+.qr-actions { margin-top: 12px; display: flex; gap: 8px; justify-content: center; }
+.qr-actions .link-btn { margin: 0; }
+
+/* --------------------------- Help modal -------------------------------- */
+.help-list { margin: 0; padding: 0 0 0 18px; color: var(--text); font-size: 14px; line-height: 1.7; }
+.help-list li { margin-bottom: 6px; }
+.help-list b { color: #ffd66b; }
+.help-note { margin-top: 14px; padding: 10px 12px; background: var(--navy-2); border-radius: 8px; color: var(--muted); font-size: 13px; }
 
 /* ----------------------------- Footer ----------------------------------- */
 .app-footer {
@@ -321,7 +396,8 @@ body {
 @media (max-width: 760px) {
   .app { padding: 14px 12px 24px; }
   .layout { flex-direction: column; align-items: stretch; }
-  .side-panel { flex: 1 1 auto; }
+  .side-panel { flex: 1 1 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .side-panel > .card { margin: 0; }
   .touch-controls { display: grid; }
   .titles h1 { font-size: 22px; }
   /* 扫码打开（手机）时隐藏二维码卡片：手机无法扫自己屏幕上的码，徒占空间 */
@@ -332,12 +408,23 @@ body {
 body.play-mode .side-panel { display: none; }
 body.play-mode .app { max-width: 540px; }
 body.play-mode .touch-controls { display: grid; }
+body.play-mode .toolbar .hint { display: none; }
 
 
+
+@media (max-width: 520px) {
+  /* 侧栏在很窄的屏幕上改为单列堆叠 */
+  .side-panel { grid-template-columns: 1fr !important; }
+  .app-header { gap: 12px; }
+  .titles h1 { font-size: 20px; }
+  .score-value { font-size: 20px; }
+  .board { width: min(94vw, 420px); }
+}
 
 @media (max-width: 420px) {
-  .scores { width: 100%; }
-  .score-box { flex: 1; }
+  .scores { width: 100%; justify-content: space-between; }
+  .score-box { flex: 1; min-width: 0; }
+  .toolbar { gap: 8px; }
 }
 
 /* ===================== 计时排行榜（新增） ===================== */
@@ -491,10 +578,14 @@ body.play-mode .touch-controls { display: grid; }
     <main class="layout">
       <section class="game-panel">
         <div class="toolbar">
-          <button id="new-game" class="btn btn-primary" type="button">新游戏</button>
-          <button id="btn-leaderboard" class="btn" type="button">排行榜</button>
+          <div class="btn-group">
+            <button id="new-game" class="btn btn-primary" type="button">新游戏</button>
+            <button id="btn-undo" class="btn" type="button" disabled>撤销</button>
+            <button id="btn-leaderboard" class="btn" type="button">排行榜</button>
+            <button id="btn-help" class="btn" type="button">玩法</button>
+          </div>
           <span class="timer" id="timer" title="本次用时">00:00</span>
-          <p class="hint">方向键 / WASD / 滑动 控制移动</p>
+          <p class="hint"><kbd>↑</kbd><kbd>↓</kbd><kbd>←</kbd><kbd>→</kbd> / WASD / 滑动 控制移动</p>
         </div>
 
         <div class="board" id="board">
@@ -534,10 +625,36 @@ body.play-mode .touch-controls { display: grid; }
       </section>
 
       <aside class="side-panel">
+        <div class="card stats-card">
+          <h3>本局战况</h3>
+          <div class="stats-grid">
+            <div class="stat-item">
+              <span class="stat-label">步数</span>
+              <span class="stat-value" id="stat-moves">0</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">用时</span>
+              <span class="stat-value accent" id="stat-time">00:00</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">最高产品</span>
+              <span class="stat-value tile-name" id="stat-best-tile">—</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">合并次数</span>
+              <span class="stat-value" id="stat-merges">0</span>
+            </div>
+          </div>
+        </div>
         <div class="card qr-card">
+          <span class="qr-badge">扫码即玩 · 手机秒开</span>
           <h3>手机扫码，随时开玩</h3>
           <div class="qr-box" id="qr"></div>
           <p class="qr-note" id="qr-url"></p>
+          <div class="qr-actions">
+            <a id="qr-download" class="link-btn" href="#" download="molex-2048-qr.png">下载二维码</a>
+            <a id="qr-copy" class="link-btn" href="#">复制链接</a>
+          </div>
         </div>
         <div class="card legend">
           <h3>产品序列</h3>
@@ -559,6 +676,26 @@ body.play-mode .touch-controls { display: grid; }
           <button id="leaderboard-close" class="modal-close" type="button" aria-label="关闭">&times;</button>
         </div>
         <div id="leaderboard-body" class="leaderboard-body"></div>
+      </div>
+    </div>
+
+    <!-- 玩法说明弹层 -->
+    <div class="modal" id="help-modal" hidden>
+      <div class="modal-card">
+        <div class="modal-head">
+          <h2>玩法说明</h2>
+          <button id="help-close" class="modal-close" type="button" aria-label="关闭">&times;</button>
+        </div>
+        <ol class="help-list">
+          <li><b>目标：</b>滑动合并同名产品，最终合成顶级产品 <b>MX DaSH</b>。</li>
+          <li><b>移动：</b>方向键 / WASD / 屏幕滑动；手机还可用棋盘下方方向键。</li>
+          <li><b>合并：</b>两个相同等级产品相撞即合成为下一级，并获得分数。</li>
+          <li><b>新瓦片：</b>每次有效移动后，棋盘随机出现一个新瓦片（90% 初级 / 10% 二级）。</li>
+          <li><b>撤销：</b>每步可撤销最近一次移动，仅可撤销一步。</li>
+          <li><b>胜利：</b>合成 <b>MX DaSH</b> 即胜，可提交用时到排行榜（需后端）。</li>
+          <li><b>失败：</b>棋盘填满且无法合并时游戏结束。</li>
+        </ol>
+        <p class="help-note">桌面端右侧可扫码用手机开玩；公网部署后扫码将直接打开当前页面，离线也能继续游玩。</p>
       </div>
     </div>
 
@@ -3156,11 +3293,25 @@ class Game {
     this.defaultActions = document.getElementById('default-actions');
     this.leaderboardModal = document.getElementById('leaderboard-modal');
     this.leaderboardBody = document.getElementById('leaderboard-body');
+    this.helpModal = document.getElementById('help-modal');
+    this.undoBtn = document.getElementById('btn-undo');
+
+    // 本局战况元素
+    this.statMoves = document.getElementById('stat-moves');
+    this.statTime = document.getElementById('stat-time');
+    this.statBestTile = document.getElementById('stat-best-tile');
+    this.statMerges = document.getElementById('stat-merges');
 
     // 计时状态
     this.startTime = 0;
     this.elapsedMs = 0;
     this.timerId = null;
+
+    // 本局统计：步数 / 合并次数 / 最高产品等级 / 撤销快照
+    this.moves = 0;
+    this.merges = 0;
+    this.bestTileLevel = 0;
+    this.undoSnapshot = null;
 
     this.best = loadBest();
     this.buildCells();
@@ -3190,9 +3341,14 @@ class Game {
     this.over = false;
     this.keepPlaying = false;
     this.tileId = 0;
+    this.moves = 0;
+    this.merges = 0;
+    this.bestTileLevel = 0;
+    this.undoSnapshot = null;
     this.startTimer(); // 新游戏开始计时
     this.addRandomTile();
     this.addRandomTile();
+    this.updateBestTile();
   }
 
   /** 重开本局 */
@@ -3305,6 +3461,10 @@ class Game {
     const trav = this.buildTraversals(vector);
     let moved = false;
     let gained = 0;
+    let mergeCount = 0;
+
+    // 记录移动前状态，供单步撤销使用
+    const prevSnapshot = this.snapshotState();
 
     this.prepareTiles();
 
@@ -3331,6 +3491,7 @@ class Game {
           tile.row = next.row;
           tile.col = next.col;
           gained += scoreFor(newLevel);
+          mergeCount += 1;
           if (newLevel === MAX_LEVEL && !this.won) {
             this.won = true;
             this.stopTimer(); // 达成 MX DaSH，停止计时
@@ -3355,9 +3516,14 @@ class Game {
         saveBest(this.best);
       }
       this.addRandomTile();
+      this.moves += 1;
+      this.merges += mergeCount;
+      this.updateBestTile();
+      this.undoSnapshot = prevSnapshot; // 仅在有效移动后提交撤销快照
       if (!this.movesAvailable()) {
         this.over = true;
         this.stopTimer(); // 游戏结束，停止计时
+        this.elapsedMs = Date.now() - this.startTime;
       }
     }
 
@@ -3434,7 +3600,86 @@ class Game {
     });
     this.scoreEl.textContent = this.score;
     this.bestEl.textContent = this.best;
+    this.updateStats();
     this.updateOverlay();
+  }
+
+  /* --------------------------- 本局统计 --------------------------- */
+
+  /** 计算并更新本局最高产品等级（取历史最大值） */
+  updateBestTile() {
+    let max = 0;
+    this.eachCell((r, c, t) => {
+      if (t && t.level > max) max = t.level;
+    });
+    if (max > this.bestTileLevel) this.bestTileLevel = max;
+  }
+
+  /** 刷新侧栏战况与撤销按钮可用性 */
+  updateStats() {
+    if (this.statMoves) this.statMoves.textContent = this.moves;
+    if (this.statMerges) this.statMerges.textContent = this.merges;
+    if (this.statBestTile) {
+      this.statBestTile.textContent = this.bestTileLevel > 0
+        ? PRODUCTS[this.bestTileLevel - 1].name
+        : '—';
+    }
+    if (this.undoBtn) this.undoBtn.disabled = !this.undoSnapshot || this.over;
+  }
+
+  /* --------------------------- 单步撤销 --------------------------- */
+
+  /** 快照当前棋盘与状态（用于撤销）。仅保存等级与坐标，重建瓦片对象。 */
+  snapshotState() {
+    const grid = this.grid.map((row) => row.map((t) => (t ? {
+      level: t.level, row: t.row, col: t.col,
+    } : null)));
+    return {
+      grid,
+      score: this.score,
+      won: this.won,
+      over: this.over,
+      keepPlaying: this.keepPlaying,
+      moves: this.moves,
+      merges: this.merges,
+      bestTileLevel: this.bestTileLevel,
+      elapsedMs: this.timerId ? (Date.now() - this.startTime) : this.elapsedMs,
+      wasRunning: !!this.timerId,
+    };
+  }
+
+  /** 从快照恢复状态（撤销一步） */
+  restoreState(snap) {
+    this.grid = snap.grid.map((row) => row.map((t) => (t ? {
+      id: (this.tileId += 1), level: t.level, row: t.row, col: t.col,
+    } : null)));
+    this.score = snap.score;
+    this.won = snap.won;
+    this.over = snap.over;
+    this.keepPlaying = snap.keepPlaying;
+    this.moves = snap.moves;
+    this.merges = snap.merges;
+    this.bestTileLevel = snap.bestTileLevel;
+    this.undoSnapshot = null; // 撤销已使用
+    // 恢复计时：若撤销前计时仍在运行，则从原 elapsed 继续
+    if (snap.wasRunning) {
+      this.elapsedMs = 0;
+      this.startTime = Date.now() - snap.elapsedMs;
+      this.stopTimer();
+      this.timerId = setInterval(() => this.updateTimerDisplay(), 250);
+      this.updateTimerDisplay();
+    } else {
+      this.elapsedMs = snap.elapsedMs;
+      this.stopTimer();
+      this.updateTimerDisplay();
+    }
+  }
+
+  /** 撤销最近一次有效移动（仅一步） */
+  undo() {
+    if (!this.undoSnapshot || this.over) return;
+    this.restoreState(this.undoSnapshot);
+    this.actuate();
   }
 
   updateOverlay() {
@@ -3496,9 +3741,10 @@ class Game {
 
   /** 刷新计时器 UI（运行中显示实时，停止后显示最终用时） */
   updateTimerDisplay() {
-    if (!this.timerEl) return;
     const ms = this.timerId ? (Date.now() - this.startTime) : this.elapsedMs;
-    this.timerEl.textContent = formatTime(ms);
+    const txt = formatTime(ms);
+    if (this.timerEl) this.timerEl.textContent = txt;
+    if (this.statTime) this.statTime.textContent = txt;
   }
 
   /* --------------------------- 提交成绩 --------------------------- */
@@ -3595,6 +3841,12 @@ class Game {
     };
 
     window.addEventListener('keydown', (e) => {
+      // Ctrl/Cmd + Z 撤销
+      if ((e.ctrlKey || e.metaKey) && (e.key === 'z' || e.key === 'Z')) {
+        e.preventDefault();
+        this.undo();
+        return;
+      }
       const dir = KEY_MAP[e.key];
       if (dir) {
         e.preventDefault();
@@ -3662,6 +3914,24 @@ class Game {
         if (e.target === this.leaderboardModal) this.closeLeaderboard();
       });
     }
+
+    // 撤销按钮
+    if (this.undoBtn) this.undoBtn.addEventListener('click', () => this.undo());
+
+    // 玩法说明弹层
+    const btnHelp = document.getElementById('btn-help');
+    if (btnHelp) btnHelp.addEventListener('click', () => {
+      if (this.helpModal) this.helpModal.hidden = false;
+    });
+    const helpClose = document.getElementById('help-close');
+    if (helpClose) helpClose.addEventListener('click', () => {
+      if (this.helpModal) this.helpModal.hidden = true;
+    });
+    if (this.helpModal) {
+      this.helpModal.addEventListener('click', (e) => {
+        if (e.target === this.helpModal) this.helpModal.hidden = true;
+      });
+    }
   }
 
   /* --------------------------- 侧栏图例 --------------------------- */
@@ -3675,9 +3945,13 @@ class Game {
       sw.className = 'swatch';
       sw.style.background = LEVEL_STYLES[i].bg;
       const nm = document.createElement('span');
-      nm.textContent = `${p.level}. ${p.name}`;
+      nm.textContent = p.name;
+      const lv = document.createElement('span');
+      lv.className = 'lv';
+      lv.textContent = `Lv ${p.level}`;
       li.appendChild(sw);
       li.appendChild(nm);
+      li.appendChild(lv);
       frag.appendChild(li);
     });
     ul.appendChild(frag);
@@ -3689,23 +3963,36 @@ class Game {
  * ================================================================== */
 
 // 公网可玩地址（部署到 GitHub Pages 后观众扫码即进入此地址）。
-// 即使本文件被下载到本地、截图印到海报上，二维码也始终指向这里，
-// 而不是无意义的 file:// 本地路径。
+// 仅在“本地预览 / 局域网”等当前地址无法被手机访问时作为回退。
+// 若页面本身就运行在公网（HTTPS、非 localhost、非 file://），二维码会直接
+// 指向当前地址，因此 Vercel / Netlify / Cloudflare Pages / 自定义域名均可用。
 const GAME_PUBLIC_URL = 'https://jarvis1sreal.github.io/molex-2048/';
 
 /**
  * 解析二维码应编码的目标地址：
- * - 若页面本身就运行在公网域名（如 *.github.io）上，直接采用当前地址，
- *   这样即使将来改仓库名 / 改分支 / 加子路径也不会失效；
- * - 否则（本地 file:// 预览、局域网、截图海报等）回退到固定公网可玩地址。
- * 统一补上 ?mode=play，让扫码设备直接进入“纯游戏”模式（隐藏侧栏，避免二维码自递归）。
+ * - 若页面运行在“公网可达”地址（http/https、非 localhost、非 file://），
+ *   直接采用当前地址——这样无论部署在 GitHub Pages / Vercel / Netlify /
+ *   自定义域名，扫码都能正确进入，且改仓库名 / 改分支也不会失效；
+ * - 否则（本地 file:// 预览、localhost 调试等手机无法访问的场景）
+ *   回退到固定公网可玩地址。
+ * 统一补上 ?mode=play，让扫码设备直接进入“纯游戏”模式（隐藏侧栏，避免
+ * 二维码自递归，并显示更适合手机的方向键面板）。
  */
 function resolveGameUrl() {
   try {
     const here = new URL(window.location.href);
-    if (here.protocol === 'https:' && here.hostname.endsWith('github.io')) {
-      if (here.search.includes('mode=play')) return window.location.href;
-      return here.origin + here.pathname + '?mode=play';
+    const host = here.hostname;
+    // 本地预览场景：file:// 协议或 localhost / 127.0.0.1，手机扫码无法访问
+    const isLocal = here.protocol === 'file:'
+      || host === 'localhost'
+      || host === '127.0.0.1'
+      || host === '[::1]';
+    if (!isLocal) {
+      // 已带 mode=play 则直接使用，避免重复拼接
+      if (here.searchParams.get('mode') === 'play') return window.location.href;
+      const clean = new URL(here.origin + here.pathname);
+      clean.searchParams.set('mode', 'play');
+      return clean.toString();
     }
   } catch (e) { /* 解析失败则走下方回退 */ }
   return GAME_PUBLIC_URL + '?mode=play';
@@ -3716,20 +4003,77 @@ function renderQR() {
   const note = document.getElementById('qr-url');
   if (!box) return;
   const url = resolveGameUrl();
-  if (note) note.textContent = url;
+  if (note) {
+    note.textContent = url;
+    note.title = url;
+  }
 
+  let dataUrl = '';
   try {
     if (typeof qrcode === 'function') {
       const qr = qrcode(0, 'M'); // typeNumber=0 自动选择
       qr.addData(url);
       qr.make();
-      const dataUrl = qr.createDataURL(6, 8); // GIF data URL，可离线显示
-      box.innerHTML = `<img src="${dataUrl}" alt="扫码开玩" />`;
+      dataUrl = qr.createDataURL(6, 8); // GIF data URL，可离线显示
+      box.innerHTML = `<img src="${dataUrl}" alt="扫码开玩 ${url}" />`;
     } else {
       box.textContent = '二维码库未加载';
     }
   } catch (err) {
     box.textContent = '生成二维码失败';
+  }
+
+  // 下载二维码为 PNG：通过 canvas 把 GIF 转为 PNG，便于印制海报
+  const dl = document.getElementById('qr-download');
+  if (dl) {
+    if (dataUrl) {
+      dl.addEventListener('click', (e) => {
+        e.preventDefault();
+        const img = new Image();
+        img.onload = () => {
+          const cv = document.createElement('canvas');
+          cv.width = img.width;
+          cv.height = img.height;
+          const ctx = cv.getContext('2d');
+          ctx.fillStyle = '#fff';
+          ctx.fillRect(0, 0, cv.width, cv.height);
+          ctx.drawImage(img, 0, 0);
+          const a = document.createElement('a');
+          a.href = cv.toDataURL('image/png');
+          a.download = 'molex-2048-qr.png';
+          a.click();
+        };
+        img.src = dataUrl;
+      });
+    } else {
+      dl.style.display = 'none';
+    }
+  }
+
+  // 复制公网链接到剪贴板
+  const copy = document.getElementById('qr-copy');
+  if (copy) {
+    copy.addEventListener('click', async (e) => {
+      e.preventDefault();
+      try {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          await navigator.clipboard.writeText(url);
+          copy.textContent = '已复制 ✓';
+        } else {
+          // 回退方案：选中文本
+          const ta = document.createElement('textarea');
+          ta.value = url;
+          document.body.appendChild(ta);
+          ta.select();
+          document.execCommand('copy');
+          document.body.removeChild(ta);
+          copy.textContent = '已复制 ✓';
+        }
+      } catch (err) {
+        copy.textContent = '复制失败';
+      }
+      setTimeout(() => { copy.textContent = '复制链接'; }, 1800);
+    });
   }
 }
 
